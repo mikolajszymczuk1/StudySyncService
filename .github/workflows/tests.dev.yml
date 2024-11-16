@@ -37,7 +37,7 @@ jobs:
 
       - name: Create test database
         run: |
-          psql -h localhost -U postgres -c 'CREATE DATABASE "driftDetailers_test";'
+          psql -h localhost -U postgres -c 'CREATE DATABASE "studySync_test";'
         env:
           PGPASSWORD: postgres
 
@@ -50,7 +50,7 @@ jobs:
             touch .env.test.local
             echo PORT=8080 >> .env.test.local
             echo ENV_MODE="test" >> .env.test.local
-            echo DATABASE_URL="postgresql://postgres:postgres@localhost:5432/driftDetailers_test?schema=public" >> .env.test.local
+            echo DATABASE_URL="postgresql://postgres:postgres@localhost:5432/studySync_test?schema=public" >> .env.test.local
             echo TOKEN_KEY="abcd" >> .env.test.local
 
       - name: Create tables for test database
