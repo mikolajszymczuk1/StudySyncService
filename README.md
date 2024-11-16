@@ -1,4 +1,4 @@
-# Drift Detailers
+# Study Sync Service
 
 1. [About](#about)
 2. [Tech stack](#tech-stack)
@@ -7,7 +7,7 @@
 
 ## About
 
-Service project for Drift Detailers
+Service project for Study Sync app
 
 ## Tech stack
 
@@ -25,7 +25,7 @@ Service project for Drift Detailers
 ### [1] Clone repository
 
 ```sh
-git@github.com:DraguaStudio/DriftdetailersService.git
+git clone git@github.com:mikolajszymczuk1/StudySyncService.git
 ```
 
 ### [2] Install all dependencies
@@ -40,8 +40,8 @@ npm ci
 
 On ubuntu (last tested version 24.04LTS)
 ```sh
-createdb driftDetailers
-createdb driftDetailers_test
+createdb studySync
+createdb studySync_test
 ```
 
 ### [5] Create `.env` and `.env.test.local` files in root of project
@@ -52,7 +52,7 @@ For `.env`:
 ```sh
 PORT=8080
 ENV_MODE="local"
-DATABASE_URL="postgresql://<user>:<password>@localhost:5432/driftDetailers?schema=public"
+DATABASE_URL="postgresql://<user>:<password>@localhost:5432/studySync?schema=public"
 TOKEN_KEY="abcd"
 ```
 
@@ -60,7 +60,7 @@ For `.env.test-local`:
 ```sh
 PORT=8080
 ENV_MODE="test"
-DATABASE_URL="postgresql://<user>:<password>@localhost:5432/driftDetailers_test?schema=public"
+DATABASE_URL="postgresql://<user>:<password>@localhost:5432/studySync_test?schema=public"
 TOKEN_KEY="abcd"
 ```
 
