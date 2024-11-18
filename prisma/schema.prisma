@@ -9,10 +9,47 @@ datasource db {
 }
 
 model User {
-  id           Int        @id @default(autoincrement())
-  username     String     @unique
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
   passwordHash String
   firstName    String
   lastName     String
-  createdAt    DateTime   @default(now())
+  createdAt    DateTime @default(now())
+
+  subjects Subject[]
+  events   Event[]
+  todos    Todo[]
+}
+
+model Subject {
+  id          Int    @id @default(autoincrement())
+  name        String
+  startTime   String
+  endTime     String
+  evenOdd     String
+  grade       Int
+  classNumber String
+  day         String
+
+  User   User @relation(fields: [userId], references: [id])
+  userId Int
+}
+
+model Event {
+  id        Int      @id @default(autoincrement())
+  name      String
+  eventDate DateTime
+
+  User   User @relation(fields: [userId], references: [id])
+  userId Int
+}
+
+model Todo {
+  id         Int     @id @default(autoincrement())
+  name       String
+  isComplete Boolean
+  order      String
+
+  User   User @relation(fields: [userId], references: [id])
+  userId Int
 }
