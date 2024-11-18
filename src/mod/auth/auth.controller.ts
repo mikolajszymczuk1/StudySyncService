@@ -14,11 +14,6 @@ export const loginAction = async (req: Request, res: Response): Promise<void> =>
   try {
     const { username, password } = req.body;
 
-    if (!(username && password)) {
-      res.status(StatusCodesEnum.BadRequest).json({ error: 'All inputs are required !' });
-      return;
-    }
-
     const user = await getUserBO(username);
     if (user?.passwordHash && (await bcrypt.compare(password, user.passwordHash))) {
       const token = createToken(user);
@@ -54,11 +49,6 @@ export const logoutAction = async (req: Request, res: Response): Promise<void> =
 export const registerAction = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, password, repeatPassword } = req.body;
-
-    if (!(username && password && repeatPassword)) {
-      res.status(StatusCodesEnum.BadRequest).json({ error: 'All inputs are required !' });
-      return;
-    }
 
     if (password !== repeatPassword) {
       res.status(StatusCodesEnum.ResourceConflict).json({ error: 'Password and repeat password are not the same !' });

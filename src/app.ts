@@ -7,6 +7,7 @@ import type { AppConfig } from '@/types/AppConfig';
 import exampleRouter from '@/mod/example/example.router';
 import authRouter from '@/mod/auth/auth.router';
 import userRouter from '@/mod/user/user.router';
+import subjectRouter from '@/mod/subject/subject.router';
 
 /**
  * Create app object
@@ -26,6 +27,7 @@ export const createApp = (config: AppConfig): Express => {
   app.use('/api/example', exampleRouter);
   app.use('/api/auth', authRouter);
   app.use('/api/user', userRouter);
+  app.use('/api/subject', subjectRouter);
 
   return app;
 };

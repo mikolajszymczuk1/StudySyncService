@@ -11,11 +11,6 @@ export const updateDataAction = async (req: Request, res: Response): Promise<voi
   try {
     const { userId, field, newValue } = req.body;
 
-    if (!(userId && field && newValue)) {
-      res.status(StatusCodesEnum.BadRequest).json({ error: 'All fields are required !' });
-      return;
-    }
-
     const updatedUserData = await updateUserDataBO(Number(userId), field, newValue);
     if (!updatedUserData) {
       res.status(StatusCodesEnum.BadRequest).json({ error: 'Field value can be only: [firstName, lastName]' });
