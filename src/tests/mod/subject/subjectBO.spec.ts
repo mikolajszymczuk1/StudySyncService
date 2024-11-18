@@ -25,13 +25,39 @@ describe('Subject BO', (): void => {
 
   beforeEach(async (): Promise<void> => {
     await pgClient.subject.deleteMany();
-    subject1 = new Subject(1, 'Math', '8:00', '10:00', 'odd', 4, '1A', 'Monday', user.id);
-    subject2 = new Subject(2, 'Physic', '10:00', '12:15', 'even', 3, '4F', 'Friday', user.id);
+    subject1 = new Subject(-1, 'Math', '8:00', '10:00', 'odd', 4, '1A', 'Monday', user.id);
+    subject2 = new Subject(-1, 'Physic', '10:00', '12:15', 'even', 3, '4F', 'Friday', user.id);
 
     // Create some subjects for test
-    await pgClient.subject.createMany({
-      data: [subject1, subject2],
-    });
+    subject1.id = (
+      await pgClient.subject.create({
+        data: {
+          name: subject1.name,
+          startTime: subject1.startTime,
+          endTime: subject1.endTime,
+          evenOdd: subject1.evenOdd,
+          grade: subject1.grade,
+          classNumber: subject1.classNumber,
+          day: subject1.day,
+          userId: subject1.userId,
+        },
+      })
+    ).id;
+
+    subject2.id = (
+      await pgClient.subject.create({
+        data: {
+          name: subject2.name,
+          startTime: subject2.startTime,
+          endTime: subject2.endTime,
+          evenOdd: subject2.evenOdd,
+          grade: subject2.grade,
+          classNumber: subject2.classNumber,
+          day: subject2.day,
+          userId: subject2.userId,
+        },
+      })
+    ).id;
   });
 
   afterAll(async (): Promise<void> => {
