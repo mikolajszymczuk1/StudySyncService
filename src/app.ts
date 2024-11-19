@@ -9,6 +9,7 @@ import authRouter from '@/mod/auth/auth.router';
 import userRouter from '@/mod/user/user.router';
 import subjectRouter from '@/mod/subject/subject.router';
 import todoRouter from '@/mod/todo/todo.router';
+import eventRouter from '@/mod/event/event.router';
 
 /**
  * Create app object
@@ -30,6 +31,7 @@ export const createApp = (config: AppConfig): Express => {
   app.use('/api/user', userRouter);
   app.use('/api/subject', subjectRouter);
   app.use('/api/todo', todoRouter);
+  app.use('/api/event', eventRouter);
 
   return app;
 };

@@ -68,8 +68,8 @@ export const removeTodoAction = async (req: Request, res: Response): Promise<voi
     const { todoId } = req.params;
     const { userId } = req.body;
 
-    const updatedTodo = await removeTodoBO(Number(todoId), Number(userId));
-    res.status(StatusCodesEnum.NewResources).json(updatedTodo);
+    const removedTodo = await removeTodoBO(Number(todoId), Number(userId));
+    res.status(StatusCodesEnum.NewResources).json(removedTodo);
   } catch (err) {
     res.status(StatusCodesEnum.BadRequest).json({ error: err });
   }
