@@ -11,6 +11,7 @@ import {
 } from '@/mod/subject/subjectBO';
 import User from '@/mod/auth/model/User';
 import Subject from '@/mod/subject/model/Subject';
+import { createTestSubject } from '@/utils/dbHelpers';
 
 describe('Subject BO', (): void => {
   let user: User;
@@ -29,35 +30,8 @@ describe('Subject BO', (): void => {
     subject2 = new Subject(-1, 'Physic', '10:00', '12:15', 'even', 3, '4F', 'Friday', user.id);
 
     // Create some subjects for test
-    subject1.id = (
-      await pgClient.subject.create({
-        data: {
-          name: subject1.name,
-          startTime: subject1.startTime,
-          endTime: subject1.endTime,
-          evenOdd: subject1.evenOdd,
-          grade: subject1.grade,
-          classNumber: subject1.classNumber,
-          day: subject1.day,
-          userId: subject1.userId,
-        },
-      })
-    ).id;
-
-    subject2.id = (
-      await pgClient.subject.create({
-        data: {
-          name: subject2.name,
-          startTime: subject2.startTime,
-          endTime: subject2.endTime,
-          evenOdd: subject2.evenOdd,
-          grade: subject2.grade,
-          classNumber: subject2.classNumber,
-          day: subject2.day,
-          userId: subject2.userId,
-        },
-      })
-    ).id;
+    subject1.id = await createTestSubject(subject1);
+    subject2.id = await createTestSubject(subject2);
   });
 
   afterAll(async (): Promise<void> => {
