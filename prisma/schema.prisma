@@ -48,7 +48,7 @@ model Todo {
   id         Int     @id @default(autoincrement())
   name       String
   isComplete Boolean
-  order      String
+  order      Int
 
   User   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int

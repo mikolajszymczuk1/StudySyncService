@@ -23,6 +23,10 @@ describe('Subject controller', (): void => {
     await pgClient.user.deleteMany();
     const passwordHash = await bcrypt.hash('password', 10);
     user = await createUserBO('testUser', passwordHash);
+  });
+
+  beforeEach(async (): Promise<void> => {
+    await pgClient.subject.deleteMany();
 
     subject1 = new Subject(-1, 'Math', '8:00', '10:00', 'odd', 4, '1A', 'Monday', user.id);
     subject2 = new Subject(-1, 'Physic', '10:00', '12:15', 'even', 3, '4F', 'Friday', user.id);
@@ -336,9 +340,9 @@ describe('Subject controller', (): void => {
 
       // Then
       expect(status).toBe(StatusCodesEnum.OK);
-      expect(subjectsBefore.length).toBe(3);
+      expect(subjectsBefore.length).toBe(2);
       const subjectsAfter = await getSubjectsBO(user.id);
-      expect(subjectsAfter.length).toBe(2);
+      expect(subjectsAfter.length).toBe(1);
     });
   });
 

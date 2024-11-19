@@ -34,6 +34,14 @@ export const fieldValidString = (fieldName: string): ValidationChain =>
   baseValid(fieldName).isString().withMessage('value must be a string');
 
 /**
+ * Check if field is boolean
+ * @param fieldName field name
+ * @returns {ValidationChain} validation chain
+ */
+export const fieldValidBoolean = (fieldName: string): ValidationChain =>
+  baseValid(fieldName).isBoolean().withMessage('value must be a boolean');
+
+/**
  * Check if field is string but can be empty
  * @param {string} fieldName field name
  * @returns {ValidationChain} validation chain

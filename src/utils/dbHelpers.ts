@@ -1,4 +1,5 @@
 import Subject from '@/mod/subject/model/Subject';
+import Todo from '@/mod/todo/model/Todo';
 import pgClient from '@/db/pgClient';
 
 /**
@@ -17,6 +18,24 @@ export const createTestSubject = async (subject: Subject): Promise<number> => {
       classNumber: subject.classNumber,
       day: subject.day,
       userId: subject.userId,
+    },
+  });
+
+  return id;
+};
+
+/**
+ * Create test todo object (for tests only)
+ * @param {Todo} todo todo object to take data from
+ * @returns {number} created todo id
+ */
+export const createTestTodo = async (todo: Todo): Promise<number> => {
+  const { id } = await pgClient.todo.create({
+    data: {
+      name: todo.name,
+      order: todo.order,
+      isComplete: todo.isComplete,
+      userId: todo.userId,
     },
   });
 
