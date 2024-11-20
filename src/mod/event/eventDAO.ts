@@ -7,7 +7,7 @@ import Event from '@/mod/event/model/Event';
  * @returns {Promise<Event[]>} all user events
  */
 export const getEventsDAO = async (userId: number): Promise<Event[]> => {
-  const events = await pgClient.event.findMany({ where: { userId } });
+  const events = await pgClient.event.findMany({ where: { userId }, orderBy: { eventDate: 'asc' } });
   return events.map((event) => Event.eventFromPrisma(event));
 };
 

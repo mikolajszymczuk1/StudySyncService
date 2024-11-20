@@ -11,7 +11,6 @@ import User from '@/mod/auth/model/User';
 import Todo from '@/mod/todo/model/Todo';
 import { createTestTodo } from '@/utils/dbHelpers';
 import { getTodosBO } from '@/mod/todo/todoBO';
-import { getTodoByOrderDAO } from '@/mod/todo/todoDAO';
 
 describe('Todo controller', (): void => {
   let app: Express | null;
@@ -386,20 +385,6 @@ describe('Todo controller', (): void => {
           path: 'order',
           location: 'body',
         },
-        {
-          type: 'field',
-          value: '',
-          msg: 'Value must be not empty',
-          path: 'oldOrder',
-          location: 'body',
-        },
-        {
-          type: 'field',
-          value: '',
-          msg: 'Value should be a number',
-          path: 'oldOrder',
-          location: 'body',
-        },
       ]);
     });
 
@@ -412,7 +397,7 @@ describe('Todo controller', (): void => {
         .post(`/api/todo/reorder/${todo1.id}`)
         .set('Accept', 'application/json')
         .auth(createToken(user), { type: 'bearer' })
-        .send({ userId: todo1.userId, order: 2, oldOrder: 1 });
+        .send({ userId: todo1.userId, order: 2 });
 
       // When
       const status = response.status;
@@ -421,7 +406,8 @@ describe('Todo controller', (): void => {
       // Then
       expect(status).toEqual(StatusCodesEnum.NewResources);
       expect(body).toMatchObject(todo1);
-      expect(await getTodoByOrderDAO(user.id, todo2.order)).toMatchObject(todo2);
+      const todos = await getTodosBO(todo1.userId);
+      expect(todos).toMatchObject([todo2, todo1]);
     });
   });
 });

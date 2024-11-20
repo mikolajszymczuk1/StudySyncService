@@ -7,8 +7,19 @@ import Todo from '@/mod/todo/model/Todo';
  * @returns {Promise<Todo[]>} Array of user todos
  */
 export const getTodosDAO = async (userId: number): Promise<Todo[]> => {
-  const todos = await pgClient.todo.findMany({ where: { userId } });
+  const todos = await pgClient.todo.findMany({ where: { userId }, orderBy: { order: 'asc' } });
   return todos.map((todo) => Todo.todoFromPrisma(todo));
+};
+
+/**
+ * Get single todo element from database
+ * @param todoId todo id
+ * @param userId user id
+ * @returns {Promise<Todo>} single todo item
+ */
+export const getSingleTodoDAO = async (todoId: number, userId: number): Promise<Todo> => {
+  const todo = (await pgClient.todo.findFirst({ where: { id: todoId, userId } })) as Todo;
+  return Todo.todoFromPrisma(todo);
 };
 
 /**
@@ -67,7 +78,7 @@ export const changeTodoStatusDAO = async (todoId: number, userId: number, isComp
 };
 
 /**
- * Reorders a todo for a specific user.
+ * Reorder a todo for a specific user.
  * @param {number} todoId The ID of the todo to be reordered.
  * @param {number} userId The ID of the user who owns the todo.
  * @param {number} order The new order or priority of the todo.
@@ -82,12 +93,41 @@ export const reorderTodoDAO = async (todoId: number, userId: number, order: numb
 };
 
 /**
- * Get todo by order value
- * @param userId The ID of user who owns the todo
- * @param order The order value
- * @returns {Promise<Todo>} Todo object
+ * Shift up todos (increment order value)
+ * @param {number} userId user id
+ * @param {number} order order value
+ * @param {number} currentOrder current order
  */
-export const getTodoByOrderDAO = async (userId: number, order: number): Promise<Todo> => {
-  const todo = (await pgClient.todo.findFirst({ where: { userId, order } })) as Todo;
-  return Todo.todoFromPrisma(todo);
+export const shiftUpTodosDAO = async (userId: number, order: number, currentOrder: number): Promise<void> => {
+  await pgClient.todo.updateMany({
+    where: {
+      userId,
+      order: { gte: order, lt: currentOrder },
+    },
+    data: {
+      order: {
+        increment: 1,
+      },
+    },
+  });
+};
+
+/**
+ * Shift down todos (decrement order value)
+ * @param {number} userId user id
+ * @param {number} order order value
+ * @param {number} currentOrder = current order
+ */
+export const shiftDownTodosDAO = async (userId: number, order: number, currentOrder: number): Promise<void> => {
+  await pgClient.todo.updateMany({
+    where: {
+      userId,
+      order: { gt: currentOrder, lte: order },
+    },
+    data: {
+      order: {
+        decrement: 1,
+      },
+    },
+  });
 };

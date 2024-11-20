@@ -18,5 +18,4 @@ export const reorderTodoValidators = [
   fieldValidNumber('todoId'),
   fieldValidNumber('userId'),
   fieldValidNumber('order'),
-  fieldValidNumber('oldOrder'),
 ];

@@ -52,4 +52,6 @@ model Todo {
 
   User   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
+
+  @@index([order])
 }

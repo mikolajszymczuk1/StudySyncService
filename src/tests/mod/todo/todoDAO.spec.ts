@@ -3,12 +3,14 @@ import bcrypt from 'bcrypt';
 import { createUserBO } from '@/mod/auth/authBO';
 import {
   getTodosDAO,
+  getSingleTodoDAO,
   createTodoDAO,
   updateTodoDAO,
   removeTodoDAO,
   changeTodoStatusDAO,
   reorderTodoDAO,
-  getTodoByOrderDAO,
+  shiftUpTodosDAO,
+  shiftDownTodosDAO,
 } from '@/mod/todo/todoDAO';
 import { getTodosBO } from '@/mod/todo/todoBO';
 import User from '@/mod/auth/model/User';
@@ -52,6 +54,19 @@ describe('Todo DAO', (): void => {
       // Then
       expect(result.length).toBe(2);
       expect(result).toMatchObject([todo1, todo2]);
+    });
+  });
+
+  describe('getSingleTodoDAO', (): void => {
+    it('Should return specific todo element', async (): Promise<void> => {
+      // Given
+      const id: number = user.id;
+
+      // When
+      const result = await getSingleTodoDAO(todo1.id, id);
+
+      // Then
+      expect(result).toMatchObject(todo1);
     });
   });
 
@@ -140,17 +155,37 @@ describe('Todo DAO', (): void => {
     });
   });
 
-  describe('getTodoByOrderDAO', (): void => {
-    it('Should return todo object found by order value', async (): Promise<void> => {
+  describe('shiftUpTodosDAO', (): void => {
+    it('Should increment order value for todos where order value is greater or equal given new order value AND less then current order value', async (): Promise<void> => {
       // Given
-      const id = user.id;
-      const order = todo1.order;
+      const order = 1;
+      const currentOrder = 2;
 
       // When
-      const result = await getTodoByOrderDAO(id, order);
+      await shiftUpTodosDAO(user.id, order, currentOrder);
 
       // Then
-      expect(result).toMatchObject(todo1);
+      const todos = await getTodosBO(user.id);
+      todos.forEach((todo) => {
+        expect(todo.order).toBe(2);
+      });
+    });
+  });
+
+  describe('shiftDownTodosDAO', (): void => {
+    it('Should decrement order value for todos where order value is greater then current order value AND less or equal new order value', async (): Promise<void> => {
+      // Given
+      const order = 2;
+      const currentOrder = 1;
+
+      // When
+      await shiftDownTodosDAO(user.id, order, currentOrder);
+
+      // Then
+      const todos = await getTodosBO(user.id);
+      todos.forEach((todo) => {
+        expect(todo.order).toBe(1);
+      });
     });
   });
 });

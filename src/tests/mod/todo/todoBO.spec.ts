@@ -12,7 +12,6 @@ import {
 import User from '@/mod/auth/model/User';
 import Todo from '@/mod/todo/model/Todo';
 import { createTestTodo } from '@/utils/dbHelpers';
-import { getTodoByOrderDAO } from '@/mod/todo/todoDAO';
 
 describe('Todo BO', (): void => {
   let user: User;
@@ -120,21 +119,23 @@ describe('Todo BO', (): void => {
   });
 
   describe('reorderTodoBO', (): void => {
-    it('Should change order value for todo', async (): Promise<void> => {
+    it('Should change order for todos', async (): Promise<void> => {
       // Given
       const id = user.id;
       const todoId = todo1.id;
       const order = todo2.order;
-      const oldOrder = todo1.order;
+      const currentOrder = todo1.order;
+
       todo1.order = order;
-      todo2.order = oldOrder;
+      todo2.order = currentOrder;
 
       // When
-      const result = await reorderTodoBO(todoId, id, order, oldOrder);
+      const result = await reorderTodoBO(todoId, id, order);
 
       // Then
+      const todosAfter: Todo[] = await getTodosBO(id);
       expect(result).toMatchObject(todo1);
-      expect(await getTodoByOrderDAO(id, todo2.order)).toMatchObject(todo2);
+      expect(todosAfter).toMatchObject([todo2, todo1]);
     });
   });
 });

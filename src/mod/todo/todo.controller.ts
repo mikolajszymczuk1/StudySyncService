@@ -85,7 +85,7 @@ export const changeStatusTodoAction = async (req: Request, res: Response): Promi
     const { todoId } = req.params;
     const { userId, isComplete } = req.body;
 
-    const updatedTodo = await changeTodoStatusBO(Number(todoId), Number(userId), Boolean(isComplete));
+    const updatedTodo = await changeTodoStatusBO(Number(todoId), Number(userId), isComplete === 'true');
     res.status(StatusCodesEnum.NewResources).json(updatedTodo);
   } catch (err) {
     res.status(StatusCodesEnum.BadRequest).json({ error: err });
@@ -100,9 +100,9 @@ export const changeStatusTodoAction = async (req: Request, res: Response): Promi
 export const reorderTodoAction = async (req: Request, res: Response): Promise<void> => {
   try {
     const { todoId } = req.params;
-    const { userId, order, oldOrder } = req.body;
+    const { userId, order } = req.body;
 
-    const updatedTodo = await reorderTodoBO(Number(todoId), Number(userId), Number(order), Number(oldOrder));
+    const updatedTodo = await reorderTodoBO(Number(todoId), Number(userId), Number(order));
     res.status(StatusCodesEnum.NewResources).json(updatedTodo);
   } catch (err) {
     res.status(StatusCodesEnum.BadRequest).json({ error: err });

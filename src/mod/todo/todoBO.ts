@@ -1,12 +1,15 @@
+import pgClient from '@/db/pgClient';
 import Todo from '@/mod/todo/model/Todo';
 import {
   getTodosDAO,
+  getSingleTodoDAO,
   createTodoDAO,
   updateTodoDAO,
   removeTodoDAO,
   changeTodoStatusDAO,
   reorderTodoDAO,
-  getTodoByOrderDAO,
+  shiftUpTodosDAO,
+  shiftDownTodosDAO,
 } from '@/mod/todo/todoDAO';
 
 /**
@@ -66,11 +69,21 @@ export const changeTodoStatusBO = async (todoId: number, userId: number, isCompl
  * @param {number} todoId The ID of the todo to be reordered.
  * @param {number} userId The ID of the user who owns the todo.
  * @param {number} order The new order or priority of the todo.
- * @param {number} oldOrder The old order of the todo
  * @returns {Promise<Todo>} Updated todo object
  */
-export const reorderTodoBO = async (todoId: number, userId: number, order: number, oldOrder: number): Promise<Todo> => {
-  const secondTodo = await getTodoByOrderDAO(userId, order);
-  await reorderTodoDAO(secondTodo.id, userId, oldOrder);
-  return await reorderTodoDAO(todoId, userId, order);
+export const reorderTodoBO = async (todoId: number, userId: number, order: number): Promise<Todo> => {
+  const result: Todo = await pgClient.$transaction(async (): Promise<Todo> => {
+    const currentOrder = (await getSingleTodoDAO(todoId, userId)).order;
+
+    if (order < currentOrder) {
+      await shiftUpTodosDAO(userId, order, currentOrder);
+    } else {
+      await shiftDownTodosDAO(userId, order, currentOrder);
+    }
+
+    const updatedTodo = await reorderTodoDAO(todoId, userId, order);
+    return updatedTodo;
+  });
+
+  return result;
 };
