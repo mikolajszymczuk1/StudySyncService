@@ -23,7 +23,7 @@ export const createApp = (config: AppConfig): Express => {
   app.use(json());
   app.use(helmet());
   app.use(compression());
-  app.use(cors({ origin: config.api.baseClientUrl, credentials: true }));
+  app.use(cors({ origin: config.api.baseClientUrl, credentials: true, methods: 'GET,POST,PUT,DELETE' }));
 
   // Routes
   app.use('/api/example', exampleRouter);
